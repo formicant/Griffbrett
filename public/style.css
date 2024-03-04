@@ -83,5 +83,24 @@ input[type="number"], select {
 }
 
 #error {
-  color: #a02;
+  color: #a20;
+}
+
+.group0 {
+  color: #785a00;
+}
+.group1 {
+  color: #7339af;
+}
+.group2 {
+  color: #00746b;
+}
+.group3 {
+  color: #ac172c;
+}
+.group4 {
+  color: #2d7000;
+}
+.group5 {
+  color: #264ad5;
 }

@@ -14,8 +14,8 @@ function getFrets(openString: Note, allowedPitches: Set<number>, fretCount: numb
 }
 
 
-export function getGroup(rootNote: Note, note: Note): number | undefined {
-  if (note.octave !== undefined) {
+export function getGroup(rootNote: Note, note: Note | null): number | undefined {
+  if (note !== null && note.octave !== undefined) {
     return Math.floor((note.octave * 12 + note.pitchClass - rootNote.pitchClass) / 12);
   } else {
     return undefined;

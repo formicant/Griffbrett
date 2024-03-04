@@ -42,29 +42,33 @@ function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
   return fretHeaderElement;
 }
 
-function getFretElement(fretNote: Note | null): HTMLSpanElement {
+function getFretElement(fretNote: Note | null, rootNote: Note): HTMLSpanElement {
   const fretElement = document.createElement('span');
   const text = fretNote !== null
     ? applyTypography(fretNote.toString())
     : '·';
+  const group = getGroup(rootNote, fretNote);
+  if (group !== undefined) {
+    fretElement.className = `group${(group + 60) % 6}`;
+  }
   fretElement.append(text);
   return fretElement;
 }
 
-function getFrettedStringElement(frettedString: Array<Note | null>): HTMLParagraphElement {
+function getFrettedStringElement(frettedString: Array<Note | null>, rootNote: Note): HTMLParagraphElement {
   const frettedStringElement = document.createElement('p');
   for (const fretNote of frettedString) {
-    frettedStringElement.appendChild(getFretElement(fretNote));
+    frettedStringElement.appendChild(getFretElement(fretNote, rootNote));
   }
   return frettedStringElement;
 }
 
-function getFretboardElement(fretboard: Array<Note | null>[]): HTMLDivElement {
+function getFretboardElement(fretboard: Array<Note | null>[], rootNote: Note): HTMLDivElement {
   const fretboardElement = document.createElement('div');
   fretboardElement.id = 'fretboard';
   fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));
   for (const frettedString of [...fretboard].reverse()) {
-    fretboardElement.appendChild(getFrettedStringElement(frettedString));
+    fretboardElement.appendChild(getFrettedStringElement(frettedString, rootNote));
   }
   return fretboardElement;
 }
@@ -101,7 +105,7 @@ export function initialize() {
       
       outputElement.replaceChildren(
         getChordDescription(chord),
-        getFretboardElement(fretboard)
+        getFretboardElement(fretboard, chord.notes[0])
       );
     } catch(error) {
       const message = error instanceof Error ? error.message : `${error}`;
