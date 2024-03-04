@@ -35,3 +35,22 @@ input[type="text"] {
 main {
   padding: 0.5rem 1rem;
 }
+
+#fretboard {
+  display: table;
+}
+
+#fretboard > p {
+  display: table-row;
+}
+
+#fretboard > p.fretHeader {
+  display: table-header-group;
+  opacity: 0.5;
+}
+
+#fretboard > p > span {
+  display: table-cell;
+  min-width: 2rem;
+  text-align: center;
+}

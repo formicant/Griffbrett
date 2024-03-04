@@ -1,4 +1,4 @@
-import { Note, noteNamePattern } from './note';
+import { Note } from './note';
 import { Chord } from './chord';
 
 const splitRegex = /\s+|(?=[A-Z])/; // split by whitespace or before uppercase letters
