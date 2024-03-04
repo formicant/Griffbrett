@@ -1,33 +1,25 @@
 import { Note } from './note';
 import { Chord } from './chord';
 import { Tuning, getGroup } from './tuning';
-
-const typographyDict: { [char: string]: string } = {
-  '#': '♯',
-  'b': '♭',
-  '0': '₀',
-  '1': '₁',
-  '2': '₂',
-  '3': '₃',
-  '4': '₄',
-  '5': '₅',
-  '6': '₆',
-  '7': '₇',
-  '8': '₈',
-  '9': '₉',
-};
-
-const typographyRegex = new RegExp(`[${Object.keys(typographyDict)}]`, 'g');
+import { applyTypography } from './typography';
 
 
 function getById<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
   if (!element) {
-    throw Error(`Cannot find element with id '${id}'.`);
+    throw Error(`Cannot find element with id '${id}'`);
   }
   return element as T;
 }
 
+
+function getChordDescription(chord: Chord): HTMLParagraphElement {
+  const chordDescriptionElement = document.createElement('p');
+  chordDescriptionElement.id = 'chordDescription';
+  const notes = applyTypography(chord.notes.join(' '));
+  chordDescriptionElement.append(`⟨ ${notes} ⟩`)
+  return chordDescriptionElement;
+}
 
 function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
   const fretHeaderElement = document.createElement('p');
@@ -43,7 +35,7 @@ function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
 function getFretElement(fretNote: Note | null): HTMLSpanElement {
   const fretElement = document.createElement('span');
   const text = fretNote !== null
-    ? fretNote.toString().replace(typographyRegex, c => typographyDict[c])
+    ? applyTypography(fretNote.toString())
     : '·';
   fretElement.append(text);
   return fretElement;
@@ -67,11 +59,55 @@ function getFretboardElement(fretboard: Array<Note | null>[]): HTMLDivElement {
   return fretboardElement;
 }
 
-export function test() {
-  const tuning = new Tuning('G4 C4 E4 A4');
-  const chord = new Chord('Cm7');
-  const fretboard = tuning.getFretboard(chord);
-  
+function getErrorElement(message: string): HTMLParagraphElement {
+  const errorElement = document.createElement('p');
+  errorElement.id = 'error';
+  errorElement.append(message);
+  return errorElement;
+}
+
+
+export function initialize() {
+  const instrumentElement = getById<HTMLSelectElement>('instrument');
+  const tuningElement = getById<HTMLInputElement>('tuning');
+  const fretCountElement = getById<HTMLInputElement>('fretCount');
+  const chordElement = getById<HTMLInputElement>('chord');
   const outputElement = getById('output');
-  outputElement.replaceChildren(getFretboardElement(fretboard));
+  
+  function showFretboard() {
+    try {
+      const tuningDescription = tuningElement.value.trim();
+      const chordName = chordElement.value.trim();
+      const fretCount = parseInt(fretCountElement.value);
+      
+      if (!tuningDescription || !chordName) {
+        outputElement.replaceChildren();
+        return;
+      }
+      
+      const tuning = new Tuning(tuningDescription);
+      const chord = new Chord(chordName);
+      const fretboard = tuning.getFretboard(chord, fretCount);
+      
+      outputElement.replaceChildren(
+        getChordDescription(chord),
+        getFretboardElement(fretboard)
+      );
+    } catch(error) {
+      const message = error instanceof Error ? error.message : `${error}`;
+      outputElement.replaceChildren(
+        getErrorElement(message)
+      );
+    }
+  }
+  
+  function onInput() {
+    showFretboard();
+  }
+  
+  tuningElement.addEventListener('input', onInput);
+  fretCountElement.addEventListener('input', onInput);
+  chordElement.addEventListener('input', onInput);
+  
+  chordElement.focus();
 }

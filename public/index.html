@@ -13,6 +13,22 @@
       <h1>Griffbrett</h1>
     </header>
     <main>
+      <section id="input">
+        <p>
+          <span>Instrument</span>
+          <select id="instrument">
+            <option>(custom)</option>
+          </select>
+          <span>Tuning</span>
+          <input id="tuning" type="text" />
+          <span>Frets</span>
+          <input id="fretCount" type="number" min="0" max="36" value="12" />
+        </p>
+        <p>
+          <span>Chord</span>
+          <input type="text" id="chord" />
+        </p>
+      </section>
       <section id="output">
       </section>
     </main>

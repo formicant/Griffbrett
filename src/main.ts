@@ -1,7 +1,3 @@
-import { test } from './ui';
-
-function initialize() {
-  test();
-}
+import { initialize } from './ui';
 
 initialize();
