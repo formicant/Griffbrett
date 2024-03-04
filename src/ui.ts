@@ -1,6 +1,7 @@
 import { Note } from './note';
 import { Chord } from './chord';
 import { Tuning, getGroup } from './tuning';
+import { instruments, instrumentByTuning, defaultInstrument } from './instruments';
 import { applyTypography } from './typography';
 
 
@@ -12,6 +13,15 @@ function getById<T extends HTMLElement>(id: string): T {
   return element as T;
 }
 
+
+function populateInstruments(instrumentsElement: HTMLSelectElement) {
+  for (const instrument of Object.keys(instruments)) {
+    const optionElement = document.createElement('option');
+    optionElement.value = instrument;
+    optionElement.innerText = instrument;
+    instrumentsElement.appendChild(optionElement);
+  }
+}
 
 function getChordDescription(chord: Chord): HTMLParagraphElement {
   const chordDescriptionElement = document.createElement('p');
@@ -101,13 +111,44 @@ export function initialize() {
     }
   }
   
-  function onInput() {
+  function onInstrumentInput() {
+    const instrument = instrumentElement.value;
+    if (instrument in instruments) {
+      const tuning = instruments[instrument];
+      tuningElement.value = tuning.description;
+      showFretboard();
+    }
+  }
+  
+  function onTuningInput() {
+    const tuningDescription = tuningElement.value;
+    let instrument = '';
+    try {
+      const tuning = new Tuning(tuningDescription);
+      if (tuning.description in instrumentByTuning) {
+        instrument = instrumentByTuning[tuning.description];
+      }
+    } catch { }
+    instrumentElement.value = instrument;
     showFretboard();
   }
   
-  tuningElement.addEventListener('input', onInput);
-  fretCountElement.addEventListener('input', onInput);
-  chordElement.addEventListener('input', onInput);
+  function onFretCountInput() {
+    showFretboard();
+  }
+  
+  function onChordInput() {
+    showFretboard();
+  }
+  
+  populateInstruments(instrumentElement);
+  instrumentElement.value = defaultInstrument;
+  onInstrumentInput();
+  
+  instrumentElement.addEventListener('input', onInstrumentInput);
+  tuningElement.addEventListener('input', onTuningInput);
+  fretCountElement.addEventListener('input', onFretCountInput);
+  chordElement.addEventListener('input', onChordInput);
   
   chordElement.focus();
 }
