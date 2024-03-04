@@ -3,6 +3,7 @@ import { Chord } from './chord';
 import { Tuning, getGroup } from './tuning';
 import { instruments, instrumentByTuning, defaultInstrument } from './instruments';
 import { applyTypography } from './typography';
+import { getGroupColor } from './colors';
 
 
 function getById<T extends HTMLElement>(id: string): T {
@@ -49,7 +50,7 @@ function getFretElement(fretNote: Note | null, rootNote: Note): HTMLSpanElement 
     : '·';
   const group = getGroup(rootNote, fretNote);
   if (group !== undefined) {
-    fretElement.className = `group${(group + 60) % 6}`;
+    fretElement.style.color = getGroupColor(group);
   }
   fretElement.append(text);
   return fretElement;
