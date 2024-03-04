@@ -76,6 +76,15 @@ describe('Tuning class', () => {
         [null, 'E3', null, null, 'G3', null, null, 'A#3', null, null, null, null, null, 'E4'],
       ]
     },
+    {
+      description: 'C5 D',
+      chordName: 'A',
+      fretCount: undefined,
+      fretboard: [
+        [null, 'C#5', null, null, 'E5', null, null, null, null, 'A5', null, null, null],
+        [null, null,  'E',  null, null, null, null, 'A',  null, null, null, "C#", null],
+      ]
+    },
   ])('getFretboard', ({ description, chordName, fretCount, fretboard }) => {
     const tuning = new Tuning(description);
     const chord = new Chord(chordName);
