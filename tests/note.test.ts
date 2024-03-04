@@ -45,14 +45,14 @@ describe('Note class', () => {
   
   test.each([
     ['G5', 'G5'],
-    ['F', 'F'],
+    ['F',  'F'],
     ['Ab', 'G#'],
   ])('toString', (noteName, expectedString) => {
     expect(new Note(noteName).toString()).toBe(expectedString);
   });
   
   test.each([
-    ['B', 'B'],
+    ['B',  'B'],
     ['B4', 'B4'],
     ['Bb', 'A#'],
   ])('equality', (noteName1, noteName2) => {
@@ -60,7 +60,7 @@ describe('Note class', () => {
   });
   
   test.each([
-    ['B', 'C'],
+    ['B',  'C'],
     ['B4', 'B'],
     ['B4', 'B5'],
   ])('inequality', (noteName1, noteName2) => {
@@ -70,7 +70,7 @@ describe('Note class', () => {
   test.each([
     ['G3', 1, 'G#3'],
     ['F3', 7, 'C4'],
-    ['B', 1, 'C'],
+    ['B',  1, 'C'],
     ['C3', 0, 'C3'],
     //['C3', -1, 'B2'], fails
   ])('addInterval', (noteName, interval, expectedResult) => {
