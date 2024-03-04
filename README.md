@@ -2,6 +2,8 @@
 
 Shows chord charts for string instruments.
 
+A web version of [Acordes](https://github.com/Zabolekar/acordes).
+
 
 ## Building and running
 
