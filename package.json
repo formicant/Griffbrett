@@ -4,7 +4,8 @@
   "description": "Shows chord charts for string instruments",
   "main": "public/script.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "deploy": "gh-pages -d public"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/formicant/Griffbrett#readme",
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "gh-pages": "^6.1.1",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",

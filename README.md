@@ -4,6 +4,8 @@ Shows chord charts for string instruments.
 
 A web version of [Acordes](https://github.com/Zabolekar/acordes).
 
+[**Try it!**](https://formicant.github.io/Griffbrett)
+
 
 ## Building and running
 
@@ -34,4 +36,8 @@ Then, execute `Live Server: Open with Live Server` VSCode command.
 ```sh
 npm test
 ```
+### Deploying to Github pages
 
+```sh
+npm run deploy
+```
