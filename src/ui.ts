@@ -2,62 +2,50 @@ import { Note } from './note';
 import { Chord } from './chord';
 import { Tuning, getGroup } from './tuning';
 import { instruments, instrumentByTuning, defaultInstrument } from './instruments';
+import { getById, createElement } from './dom';
 import { applyTypography } from './typography';
 import { getGroupColor } from './colors';
 
-
-function getById<T extends HTMLElement>(id: string): T {
-  const element = document.getElementById(id);
-  if (!element) {
-    throw Error(`Cannot find element with id '${id}'`);
-  }
-  return element as T;
-}
-
-
 function populateInstruments(instrumentsElement: HTMLSelectElement) {
   for (const instrument of Object.keys(instruments)) {
-    const optionElement = document.createElement('option');
-    optionElement.value = instrument;
-    optionElement.innerText = instrument;
-    instrumentsElement.appendChild(optionElement);
+    instrumentsElement.appendChild(createElement('option', {
+      value: instrument,
+      innerText: instrument
+    }));
   }
 }
 
 function getChordDescription(chord: Chord): HTMLParagraphElement {
-  const chordDescriptionElement = document.createElement('p');
-  chordDescriptionElement.id = 'chordDescription';
   const notes = applyTypography(chord.notes.join(' '));
-  chordDescriptionElement.append(`⟨ ${notes} ⟩`)
-  return chordDescriptionElement;
+  return createElement('p', {
+    id: 'chordDescription',
+    innerText: `⟨ ${notes} ⟩`
+  });
 }
 
 function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
-  const fretHeaderElement = document.createElement('p');
-  fretHeaderElement.className = 'fretHeader';
+  const fretHeaderElement = createElement('p', {
+    className: 'fretHeader'
+  });
   for (const fretIndex of Array(fretCount).keys()) {
-    const fretIndexElement = document.createElement('span');
-    fretIndexElement.append(fretIndex.toString());
-    fretHeaderElement.appendChild(fretIndexElement);
+    fretHeaderElement.appendChild(createElement('span', {
+      innerText: fretIndex.toString()
+    }));
   }
   return fretHeaderElement;
 }
 
 function getFretElement(fretNote: Note | null, rootNote: Note): HTMLSpanElement {
-  const fretElement = document.createElement('span');
-  const text = fretNote !== null
+  const innerText = fretNote !== null
     ? applyTypography(fretNote.toString())
     : '·';
   const group = getGroup(rootNote, fretNote);
-  if (group !== undefined) {
-    fretElement.style.color = getGroupColor(group);
-  }
-  fretElement.append(text);
-  return fretElement;
+  const color = group !== undefined ? getGroupColor(group) : undefined;
+  return createElement('span', { innerText }, { color });
 }
 
 function getFrettedStringElement(frettedString: Array<Note | null>, rootNote: Note): HTMLParagraphElement {
-  const frettedStringElement = document.createElement('p');
+  const frettedStringElement = createElement('p');
   for (const fretNote of frettedString) {
     frettedStringElement.appendChild(getFretElement(fretNote, rootNote));
   }
@@ -65,8 +53,7 @@ function getFrettedStringElement(frettedString: Array<Note | null>, rootNote: No
 }
 
 function getFretboardElement(fretboard: Array<Note | null>[], rootNote: Note): HTMLDivElement {
-  const fretboardElement = document.createElement('div');
-  fretboardElement.id = 'fretboard';
+  const fretboardElement = createElement('div', { id: 'fretboard' });
   fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));
   for (const frettedString of [...fretboard].reverse()) {
     fretboardElement.appendChild(getFrettedStringElement(frettedString, rootNote));
@@ -75,10 +62,10 @@ function getFretboardElement(fretboard: Array<Note | null>[], rootNote: Note): H
 }
 
 function getErrorElement(message: string): HTMLParagraphElement {
-  const errorElement = document.createElement('p');
-  errorElement.id = 'error';
-  errorElement.append(message);
-  return errorElement;
+  return createElement('p', {
+    id: 'error',
+    innerText: message
+  });
 }
 
 

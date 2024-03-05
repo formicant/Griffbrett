@@ -9,5 +9,5 @@ export function getGroupColor(group: number): string {
   const l = lightness * 100;
   const a = saturation * Math.cos(hue) * 100;
   const b = saturation * Math.sin(hue) * 100;
-  return `oklab(${l.toFixed(2)}% ${a.toFixed(2)}% ${b.toFixed(2)}%)`;
+  return `oklab(${l.toFixed(1)}% ${a.toFixed(1)}% ${b.toFixed(1)}%)`;
 }
