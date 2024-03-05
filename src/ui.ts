@@ -1,5 +1,5 @@
 import { Note } from './note';
-import { Chord } from './chord';
+import { Chord, knownChordNames } from './chord';
 import { Tuning, getGroup } from './tuning';
 import { instruments, instrumentByTuning, defaultInstrument } from './instruments';
 import { getById, createElement } from './dom';
@@ -12,6 +12,12 @@ function populateInstruments(instrumentsElement: HTMLSelectElement) {
       value: instrument,
       innerText: instrument
     }));
+  }
+}
+
+function populateChords(chordsDataList: HTMLDataListElement) {
+  for (const chordName of knownChordNames) {
+    chordsDataList.appendChild(createElement('option', { value: chordName }));
   }
 }
 
@@ -140,6 +146,8 @@ export function initialize() {
   populateInstruments(instrumentElement);
   instrumentElement.value = defaultInstrument;
   onInstrumentInput();
+  
+  populateChords(getById<HTMLDataListElement>('chords'));
   
   instrumentElement.addEventListener('input', onInstrumentInput);
   tuningElement.addEventListener('input', onTuningInput);

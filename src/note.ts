@@ -1,4 +1,4 @@
-const noteNames = [
+export const noteNames = [
   ['C'], ['C#', 'Db'],
   ['D'], ['D#', 'Eb'],
   ['E'],
