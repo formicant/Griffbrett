@@ -29,7 +29,7 @@ main {
   text-align: center;
 }
 
-section > p {
+#input > p {
   padding-bottom: 0.5rem;
 }
 
@@ -60,6 +60,10 @@ input[type="number"], select {
 
 #fretCount {
   width: 3rem;
+}
+
+#status {
+  height: 2rem;
 }
 
 #fretboard {
