@@ -43,6 +43,16 @@ describe('Tuning class', () => {
   
   test.each([
     {
+      description: 'A B C',
+      chordName: undefined,
+      fretCount: 3,
+      fretboard: [
+        [null, null, null, null],
+        [null, null, null, null],
+        [null, null, null, null],
+      ]
+    },
+    {
       description: 'C4',
       chordName: 'C',
       fretCount: 0,
@@ -87,7 +97,7 @@ describe('Tuning class', () => {
     },
   ])('getFretboard', ({ description, chordName, fretCount, fretboard }) => {
     const tuning = new Tuning(description);
-    const chord = new Chord(chordName);
+    const chord = chordName !== undefined ? new Chord(chordName) : undefined;
     const expectedFretboard = fretboard.map(s => s.map(n => n !== null ? new Note(n) : null));
     const actualFretboard = tuning.getFretboard(chord, fretCount);
     expect(actualFretboard).toEqual(expectedFretboard);

@@ -42,8 +42,10 @@ export class Tuning {
     return `Tuning("${this.description}")`;
   }
   
-  getFretboard(chord: Chord, fretCount: number = 12): Array<Note | null>[] {
-    const allowedPitches = new Set(chord.notes.map(n => n.pitchClass));
-    return this.openStrings.map(s => getFrets(s, allowedPitches, fretCount));
+  getFretboard(chord?: Chord, fretCount: number = 12): Array<Note | null>[] {
+    const allowedPitches = chord !== undefined
+      ? chord.notes.map(n => n.pitchClass)
+      : [];
+    return this.openStrings.map(s => getFrets(s, new Set(allowedPitches), fretCount));
   }
 }

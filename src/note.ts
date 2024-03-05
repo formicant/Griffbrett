@@ -29,7 +29,7 @@ const noteRegex = new RegExp(`^(${noteNamePattern})(\\d)?$`);
 
 export class Note {
   readonly pitchClass: number;
-  readonly octave: number | undefined;
+  readonly octave?: number;
   
   constructor(name: string) {
     const match = name.match(noteRegex);
@@ -46,7 +46,7 @@ export class Note {
     }
   }
   
-  private static fromPitchClassAndOctave(pitchClass: number, octave: number | undefined): Note {
+  private static fromPitchClassAndOctave(pitchClass: number, octave?: number): Note {
     let note = Object.create(Note.prototype);
     note.pitchClass = pitchClass;
     note.octave = octave;

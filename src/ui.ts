@@ -35,16 +35,16 @@ function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
   return fretHeaderElement;
 }
 
-function getFretElement(fretNote: Note | null, rootNote: Note): HTMLSpanElement {
+function getFretElement(fretNote: Note | null, rootNote?: Note): HTMLSpanElement {
   const innerText = fretNote !== null
     ? applyTypography(fretNote.toString())
     : '·';
-  const group = getGroup(rootNote, fretNote);
+  const group = rootNote !== undefined ? getGroup(rootNote, fretNote) : undefined;
   const color = group !== undefined ? getGroupColor(group) : undefined;
   return createElement('span', { innerText }, { color });
 }
 
-function getFrettedStringElement(frettedString: Array<Note | null>, rootNote: Note): HTMLParagraphElement {
+function getFrettedStringElement(frettedString: Array<Note | null>, rootNote?: Note): HTMLParagraphElement {
   const frettedStringElement = createElement('p');
   for (const fretNote of frettedString) {
     frettedStringElement.appendChild(getFretElement(fretNote, rootNote));
@@ -52,7 +52,7 @@ function getFrettedStringElement(frettedString: Array<Note | null>, rootNote: No
   return frettedStringElement;
 }
 
-function getFretboardElement(fretboard: Array<Note | null>[], rootNote: Note): HTMLDivElement {
+function getFretboardElement(fretboard: Array<Note | null>[], rootNote?: Note): HTMLDivElement {
   const fretboardElement = createElement('div', { id: 'fretboard' });
   fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));
   for (const frettedString of [...fretboard].reverse()) {
@@ -74,32 +74,36 @@ export function initialize() {
   const tuningElement = getById<HTMLInputElement>('tuning');
   const fretCountElement = getById<HTMLInputElement>('fretCount');
   const chordElement = getById<HTMLInputElement>('chord');
+  const statusElement = getById('status');
   const outputElement = getById('output');
   
   function showFretboard() {
+    const tuningDescription = tuningElement.value.trim();
+    const chordName = chordElement.value.trim();
+    const fretCount = parseInt(fretCountElement.value);
+    
+    statusElement.replaceChildren();
+    outputElement.replaceChildren();
+    
     try {
-      const tuningDescription = tuningElement.value.trim();
-      const chordName = chordElement.value.trim();
-      const fretCount = parseInt(fretCountElement.value);
-      
-      if (!tuningDescription || !chordName) {
-        outputElement.replaceChildren();
-        return;
-      }
-      
       const tuning = new Tuning(tuningDescription);
-      const chord = new Chord(chordName);
+      let chord = undefined;
+      if (chordName !== '') {
+        try {
+          chord = new Chord(chordName);
+          statusElement.appendChild(getChordDescription(chord));
+        } catch(error) {
+          const message = error instanceof Error ? error.message : `${error}`;
+          statusElement.appendChild(getErrorElement(message));
+        }
+      }
       const fretboard = tuning.getFretboard(chord, fretCount);
-      
-      outputElement.replaceChildren(
-        getChordDescription(chord),
-        getFretboardElement(fretboard, chord.notes[0])
+      outputElement.appendChild(
+        getFretboardElement(fretboard, chord?.notes[0])
       );
     } catch(error) {
       const message = error instanceof Error ? error.message : `${error}`;
-      outputElement.replaceChildren(
-        getErrorElement(message)
-      );
+      statusElement.appendChild(getErrorElement(`Invalid tuning: ${message}`));
     }
   }
   
