@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="icon.svg" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+    <title>Griffbrett</title>
+  </head>
+  <body>
+    <header>
+      <h1>Griffbrett</h1>
+    </header>
+    <main>
+      <section id="input">
+        <p>
+          <span>Instrument</span>
+          <select id="instrument">
+            <option value="">(custom)</option>
+          </select>
+          <span>Tuning</span>
+          <input id="tuning" type="text" />
+          <span>Frets</span>
+          <input id="fretCount" type="number" min="0" max="36" value="12" />
+        </p>
+        <p>
+          <span>Chord</span>
+          <input type="text" id="chord" />
+        </p>
+      </section>
+      <section id="output">
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <rect width="15" height="16" fill="white" />
+  <circle cx="13.5" cy="8.5" r="2.5" fill="white"  />
+  <rect x="1.25" y="1.25" width="12.5" height="1.5" />
+  <rect x="1.25" y="6.25" width="12.5" height="0.5" />
+  <rect x="1.25" y="10.25" width="12.5" height="0.5" />
+  <rect x="1.25" y="14.25" width="12.5" height="0.5" />
+  <rect x="1.25" y="1.25" width="0.5" height="13.25" />
+  <rect x="5.25" y="1.25" width="0.5" height="13.25" />
+  <rect x="9.25" y="1.25" width="0.5" height="13.25" />
+  <rect x="13.25" y="1.25" width="0.5" height="13.25" />
+  <circle cx="5.5" cy="8.5" r="1.5" />
+  <circle cx="9.5" cy="12.5" r="1.5" />
+  <circle cx="13.5" cy="8.5" r="1.5" />
+</svg>
