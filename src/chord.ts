@@ -22,11 +22,13 @@ const suffixMeanings: { [suffix: string]: number[] } = {
 };
 
 export const knownChordNames: string[] = [];
-for (const notes of noteNames) {
-  for (const note of notes) {
-    for (const suffix of Object.keys(suffixMeanings)) {
-      knownChordNames.push(note + suffix);
-    }
+const notes = noteNames.flat();
+notes.sort();
+const suffixes = Object.keys(suffixMeanings);
+suffixes.sort();
+for (const note of notes) {
+  for (const suffix of suffixes) {
+    knownChordNames.push(note + suffix);
   }
 }
 

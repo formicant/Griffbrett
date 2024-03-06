@@ -6,21 +6,6 @@ import { getById, createElement } from './dom';
 import { applyTypography } from './typography';
 import { getGroupColor } from './colors';
 
-function populateInstruments(instrumentsElement: HTMLSelectElement) {
-  for (const instrument of Object.keys(instruments)) {
-    instrumentsElement.appendChild(createElement('option', {
-      value: instrument,
-      innerText: instrument
-    }));
-  }
-}
-
-function populateChords(chordsDataList: HTMLDataListElement) {
-  for (const chordName of knownChordNames) {
-    chordsDataList.appendChild(createElement('option', { value: chordName }));
-  }
-}
-
 function getChordDescription(chord: Chord): HTMLParagraphElement {
   const notes = applyTypography(chord.notes.join(' '));
   return createElement('p', {
@@ -80,8 +65,38 @@ export function initialize() {
   const tuningElement = getById<HTMLInputElement>('tuning');
   const fretCountElement = getById<HTMLInputElement>('fretCount');
   const chordElement = getById<HTMLInputElement>('chord');
+  const chordsDataList = getById<HTMLDataListElement>('chords');
   const statusElement = getById('status');
   const outputElement = getById('output');
+  
+  const chordOptions: { [chord: string]: HTMLOptionElement } = { };
+  for (const chord of knownChordNames) {
+    chordOptions[chord] = createElement('option', { value: chord });
+  }
+
+  function populateChords(text: string = '') {
+    const normalizedText = text.trim().toLowerCase();
+    const exactMatches = knownChordNames.filter(c =>
+      c.toLowerCase() === normalizedText);
+    const beginningMatches = knownChordNames.filter(c =>
+      c.toLowerCase().startsWith(normalizedText) &&
+      !exactMatches.includes(c));
+    const substringMatches = knownChordNames.filter(c =>
+      c.toLowerCase().includes(normalizedText) &&
+      !exactMatches.includes(c) &&
+      !beginningMatches.includes(c));
+    const matches = [...exactMatches, ...beginningMatches, ...substringMatches];
+    chordsDataList.replaceChildren(...matches.map(c => chordOptions[c]));
+  }
+  
+  function populateInstruments() {
+    for (const instrument of Object.keys(instruments)) {
+      instrumentElement.appendChild(createElement('option', {
+        value: instrument,
+        innerText: instrument
+      }));
+    }
+  }
   
   function showFretboard() {
     const tuningDescription = tuningElement.value.trim();
@@ -139,15 +154,18 @@ export function initialize() {
     showFretboard();
   }
   
-  function onChordInput() {
+  function onChordInput(e: Event) {
+    if (e instanceof InputEvent && e.inputType !== 'insertReplacementText') {
+      const text = chordElement.value.trim();
+      populateChords(text);
+    }
     showFretboard();
   }
   
-  populateInstruments(instrumentElement);
+  populateInstruments();
   instrumentElement.value = defaultInstrument;
   onInstrumentInput();
-  
-  populateChords(getById<HTMLDataListElement>('chords'));
+  populateChords();
   
   instrumentElement.addEventListener('input', onInstrumentInput);
   tuningElement.addEventListener('input', onTuningInput);
