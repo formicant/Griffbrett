@@ -1,4 +1,4 @@
-import { Note } from '../src/note';
+import { Note } from '../src/theory/note';
 
 describe('Note class', () => {
   

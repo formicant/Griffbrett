@@ -1,10 +1,9 @@
-import { Note } from './note';
-import { Chord, knownChordNames } from './chord';
-import { Tuning, getGroup } from './tuning';
-import { instruments, instrumentByTuning, defaultInstrument } from './instruments';
+import { Chord, knownChordNames } from '../theory/chord';
+import { Tuning } from '../theory/tuning';
+import { instruments, instrumentByTuning, defaultInstrument } from '../theory/instruments';
 import { getById, createElement } from './dom';
 import { applyTypography } from './typography';
-import { getGroupColor } from './colors';
+import { getFretboardElement } from './fretboard';
 
 function getChordDescription(chord: Chord): HTMLParagraphElement {
   const notes = applyTypography(chord.notes.join(' '));
@@ -12,44 +11,6 @@ function getChordDescription(chord: Chord): HTMLParagraphElement {
     id: 'chordDescription',
     innerText: `⟨ ${notes} ⟩`
   });
-}
-
-function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
-  const fretHeaderElement = createElement('p', {
-    className: 'fretHeader'
-  });
-  for (const fretIndex of Array(fretCount).keys()) {
-    fretHeaderElement.appendChild(createElement('span', {
-      innerText: fretIndex.toString()
-    }));
-  }
-  return fretHeaderElement;
-}
-
-function getFretElement(fretNote: Note | null, rootNote?: Note): HTMLSpanElement {
-  const innerText = fretNote !== null
-    ? applyTypography(fretNote.toString())
-    : '·';
-  const group = rootNote !== undefined ? getGroup(rootNote, fretNote) : undefined;
-  const color = group !== undefined ? getGroupColor(group) : undefined;
-  return createElement('span', { innerText }, { color });
-}
-
-function getFrettedStringElement(frettedString: Array<Note | null>, rootNote?: Note): HTMLParagraphElement {
-  const frettedStringElement = createElement('p');
-  for (const fretNote of frettedString) {
-    frettedStringElement.appendChild(getFretElement(fretNote, rootNote));
-  }
-  return frettedStringElement;
-}
-
-function getFretboardElement(fretboard: Array<Note | null>[], rootNote?: Note): HTMLDivElement {
-  const fretboardElement = createElement('div', { id: 'fretboard' });
-  fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));
-  for (const frettedString of [...fretboard].reverse()) {
-    fretboardElement.appendChild(getFrettedStringElement(frettedString, rootNote));
-  }
-  return fretboardElement;
 }
 
 function getErrorElement(message: string): HTMLParagraphElement {

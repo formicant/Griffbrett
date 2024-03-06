@@ -1,4 +1,4 @@
-import { Note, noteNamePattern, noteNames } from './note';
+import { Note, noteNamePattern, knownNoteNames } from './note';
 
 // Intervals in semitones:
 const [P1, m2, M2, m3, M3, P4, A4, P5, m6, M6, m7, M7] = Array(12).keys();
@@ -21,17 +21,15 @@ const suffixMeanings: { [suffix: string]: number[] } = {
   'M7':     [P1, M3, P5, M7],
 };
 
+const knownSuffixes = Object.keys(suffixMeanings);
+knownSuffixes.sort();
+
 export const knownChordNames: string[] = [];
-const notes = noteNames.flat();
-notes.sort();
-const suffixes = Object.keys(suffixMeanings);
-suffixes.sort();
-for (const note of notes) {
-  for (const suffix of suffixes) {
+for (const note of knownNoteNames) {
+  for (const suffix of knownSuffixes) {
     knownChordNames.push(note + suffix);
   }
 }
-
 
 const chordRegex = new RegExp(`^(${noteNamePattern})(.*)$`);
 

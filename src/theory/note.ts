@@ -1,4 +1,4 @@
-export const noteNames = [
+const noteNames = [
   ['C'], ['C#', 'Db'],
   ['D'], ['D#', 'Eb'],
   ['E'],
@@ -21,6 +21,9 @@ for (const [index, names] of noteNames.entries()) {
     noteIndexByName[name] = index;
   }
 }
+
+export const knownNoteNames = Object.keys(noteIndexByName);
+knownNoteNames.sort();
 
 export const noteNamePattern = '[A-G][#b]?';
 

@@ -1,5 +1,5 @@
-import { Note } from '../src/note';
-import { Chord } from '../src/chord';
+import { Note } from '../src/theory/note';
+import { Chord } from '../src/theory/chord';
 
 describe('Chord class', () => {
   

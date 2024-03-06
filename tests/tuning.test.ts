@@ -1,6 +1,6 @@
-import { Note } from '../src/note';
-import { Chord } from '../src/chord';
-import { Tuning, getGroup } from '../src/tuning';
+import { Note } from '../src/theory/note';
+import { Chord } from '../src/theory/chord';
+import { Tuning, getGroup } from '../src/theory/tuning';
 
 describe('Tuning class', () => {
   
