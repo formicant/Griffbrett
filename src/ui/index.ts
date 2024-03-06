@@ -76,10 +76,11 @@ function displayPage(model: Model) {
   try {
     const tuning = new Tuning(model.tuningDescription);
     
+    const chordName = model.chordName.trim();
     let chord: Chord | undefined = undefined;
-    if (model.chordName.trim() !== '') {
+    if (chordName !== '') {
       try {
-        chord = new Chord(model.chordName);
+        chord = new Chord(chordName);
         status.push(getChordDescriptionElement(chord));
       } catch(error) {
         const message = error instanceof Error ? error.message : `${error}`;
@@ -90,6 +91,9 @@ function displayPage(model: Model) {
     const fretboard = tuning.getFretboard(chord, model.fretCount);
     output.push(getFretboardElement(fretboard, chord?.notes[0]));
     
+    if (chord !== undefined || chordName === '') {
+      setUrlHash(model);
+    }
   } catch(error) {
     const message = error instanceof Error ? error.message : `${error}`;
     status.push(getErrorElement(`Invalid tuning: ${message}`));
@@ -107,7 +111,6 @@ function displayPage(model: Model) {
 function changeModel(newModel: Model) {
   model = makeConsistent(newModel);
   displayPage(model);
-  setUrlHash(model);
 }
 
 // Input actions:

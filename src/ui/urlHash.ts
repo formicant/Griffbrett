@@ -17,7 +17,8 @@ export function getUrlHash(): Model {
 }
 
 export function setUrlHash(model: Model) {
-  const tuning = model.tuningDescription.replace(/\s+/g, '-');
-  const hash = `${formatVersion}|${tuning}|${model.fretCount}|${model.chordName}`;
+  const tuningDescription = model.tuningDescription.trim().replace(/\s+/g, '-');
+  const chordName = model.chordName.trim();
+  const hash = `${formatVersion}|${tuningDescription}|${model.fretCount}|${chordName}`;
   window.location.hash = hash;
 }
