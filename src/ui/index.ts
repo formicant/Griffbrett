@@ -4,7 +4,8 @@ import { instruments } from '../theory/instruments';
 import { getById, createElement } from './dom';
 import { applyTypography } from './typography';
 import { getFretboardElement } from './fretboard';
-import { Model, makeConsistent, defaultModel } from './model';
+import { Model, makeConsistent } from './model';
+import { getUrlHash, setUrlHash } from './urlHash';
 
 
 // Html elements
@@ -64,7 +65,7 @@ function getErrorElement(message: string): HTMLParagraphElement {
 }
 
 
-let model: Model = makeConsistent(defaultModel);
+let model: Model;
 
 function displayPage(model: Model) {
   // assuming that the model is consistent
@@ -106,6 +107,7 @@ function displayPage(model: Model) {
 function changeModel(newModel: Model) {
   model = makeConsistent(newModel);
   displayPage(model);
+  setUrlHash(model);
 }
 
 // Input actions:
@@ -138,7 +140,8 @@ function onChordInput(e?: Event) {
 export function initialize() {  
   populateChordsDatalist();
   populateInstruments();
-  displayPage(model);
+  
+  changeModel(getUrlHash());
   
   instrumentElement.addEventListener('input', onInstrumentInput);
   tuningElement    .addEventListener('input', onTuningInput);
