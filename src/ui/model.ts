@@ -27,7 +27,7 @@ export function makeConsistent(model: Model): Model {
     const tuning = new Tuning(model.tuningDescription).description;
     if (tuning !== instrumentTuning) {
       // if tuning is valid and differs from instrument's, change the instrument
-      const instrument = instrumentByTuning[tuning];
+      const instrument = instrumentByTuning[tuning] || '';
       return { ...model, instrument };
     }
   } catch { }
