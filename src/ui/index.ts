@@ -1,18 +1,20 @@
 import { Chord, knownChordNames } from '../theory/chord';
 import { Tuning } from '../theory/tuning';
-import { instruments, instrumentByTuning, defaultInstrument } from '../theory/instruments';
+import { instruments } from '../theory/instruments';
 import { getById, createElement } from './dom';
 import { applyTypography } from './typography';
 import { getFretboardElement } from './fretboard';
+import { Model, makeConsistent, defaultModel } from './model';
+
 
 // Html elements
 const instrumentElement = getById<HTMLSelectElement>('instrument');
-const tuningElement = getById<HTMLInputElement>('tuning');
-const fretCountElement = getById<HTMLInputElement>('fretCount');
-const chordElement = getById<HTMLInputElement>('chord');
-const chordsDataList = getById<HTMLDataListElement>('chords');
-const statusElement = getById('status');
-const outputElement = getById('output');
+const tuningElement     = getById<HTMLInputElement>('tuning');
+const fretCountElement  = getById<HTMLInputElement>('fretCount');
+const chordElement      = getById<HTMLInputElement>('chord');
+const chordsDataList    = getById<HTMLDataListElement>('chords');
+const statusElement     = getById('status');
+const outputElement     = getById('output');
 
 // Chords datalist options
 const chordOptions: { [chord: string]: HTMLOptionElement } = { };
@@ -46,7 +48,7 @@ function populateInstruments() {
   }
 }
 
-function getChordDescription(chord: Chord): HTMLParagraphElement {
+function getChordDescriptionElement(chord: Chord): HTMLParagraphElement {
   const notes = applyTypography(chord.notes.join(' '));
   return createElement('p', {
     id: 'chordDescription',
@@ -61,82 +63,82 @@ function getErrorElement(message: string): HTMLParagraphElement {
   });
 }
 
-function showFretboard() {
-  const tuningDescription = tuningElement.value.trim();
-  const chordName = chordElement.value.trim();
-  const fretCount = parseInt(fretCountElement.value);
+
+let model: Model = makeConsistent(defaultModel);
+
+function displayPage(model: Model) {
+  // assuming that the model is consistent
   
-  statusElement.replaceChildren();
-  outputElement.replaceChildren();
+  const status = [];
+  const output = [];
   
   try {
-    const tuning = new Tuning(tuningDescription);
+    const tuning = new Tuning(model.tuningDescription);
     
-    let chord = undefined;
-    if (chordName !== '') {
+    let chord: Chord | undefined = undefined;
+    if (model.chordName.trim() !== '') {
       try {
-        chord = new Chord(chordName);
-        statusElement.appendChild(getChordDescription(chord));
+        chord = new Chord(model.chordName);
+        status.push(getChordDescriptionElement(chord));
       } catch(error) {
         const message = error instanceof Error ? error.message : `${error}`;
-        statusElement.appendChild(getErrorElement(message));
+        status.push(getErrorElement(message));
       }
     }
     
-    const fretboard = tuning.getFretboard(chord, fretCount);
-    outputElement.appendChild(
-      getFretboardElement(fretboard, chord?.notes[0])
-    );
+    const fretboard = tuning.getFretboard(chord, model.fretCount);
+    output.push(getFretboardElement(fretboard, chord?.notes[0]));
     
   } catch(error) {
     const message = error instanceof Error ? error.message : `${error}`;
-    statusElement.appendChild(getErrorElement(`Invalid tuning: ${message}`));
+    status.push(getErrorElement(`Invalid tuning: ${message}`));
   }
+
+  instrumentElement.value = model.instrument;
+  tuningElement.value = model.tuningDescription;
+  fretCountElement.value = model.fretCount.toString();
+  chordElement.value = model.chordName;
+  
+  statusElement.replaceChildren(...status);
+  outputElement.replaceChildren(...output);
+}
+
+function changeModel(newModel: Model) {
+  model = makeConsistent(newModel);
+  displayPage(model);
 }
 
 // Input actions:
 
 function onInstrumentInput() {
   const instrument = instrumentElement.value;
-  if (instrument in instruments) {
-    const tuning = instruments[instrument];
-    tuningElement.value = tuning.description;
-    showFretboard();
-  }
+  changeModel({ ...model, instrument, tuningDescription: '' });
 }
 
 function onTuningInput() {
   const tuningDescription = tuningElement.value;
-  let instrument = '';
-  try {
-    const tuning = new Tuning(tuningDescription);
-    if (tuning.description in instrumentByTuning) {
-      instrument = instrumentByTuning[tuning.description];
-    }
-  } catch { }
-  instrumentElement.value = instrument;
-  showFretboard();
+  changeModel({ ...model, tuningDescription, instrument: '' });
 }
 
 function onFretCountInput() {
-  showFretboard();
+  const fretCount = parseInt(fretCountElement.value);
+  changeModel({ ...model, fretCount });
 }
 
-function onChordInput(e: Event) {
+function onChordInput(e?: Event) {
+  const chordName = chordElement.value;
   if (e instanceof InputEvent && e.inputType !== 'insertReplacementText') {
-    const text = chordElement.value.trim();
-    populateChordsDatalist(text);
+    populateChordsDatalist(chordName);
   }
-  showFretboard();
+  changeModel({ ...model, chordName });
 }
 
 
-// Entry function
+// Entry point
 export function initialize() {  
   populateChordsDatalist();
   populateInstruments();
-  instrumentElement.value = defaultInstrument;
-  onInstrumentInput();
+  displayPage(model);
   
   instrumentElement.addEventListener('input', onInstrumentInput);
   tuningElement    .addEventListener('input', onTuningInput);

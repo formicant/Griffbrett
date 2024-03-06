@@ -38,5 +38,3 @@ for (const [name, tuning] of Object.entries(instruments)) {
   // Now, the last instrument with the given tuning is used.
   // TODO: Change this if needed.
 }
-
-export const defaultInstrument = 'Ukulele (high G)';
