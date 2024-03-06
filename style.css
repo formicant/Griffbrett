@@ -72,6 +72,10 @@ datalist {
   height: 2rem;
 }
 
+#output {
+  overflow-x: scroll;
+}
+
 #fretboard {
   display: table;
   margin: 0.5rem auto;
