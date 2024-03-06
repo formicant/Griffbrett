@@ -135,13 +135,18 @@ function onChordInput(e?: Event) {
   changeModel({ ...model, chordName });
 }
 
+function onHashChange() {
+  changeModel(getUrlHash());
+}
+
 
 // Entry point
 export function initialize() {  
   populateChordsDatalist();
   populateInstruments();
   
-  changeModel(getUrlHash());
+  onHashChange();
+  addEventListener('hashchange', onHashChange);
   
   instrumentElement.addEventListener('input', onInstrumentInput);
   tuningElement    .addEventListener('input', onTuningInput);
