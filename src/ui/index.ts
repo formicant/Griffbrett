@@ -140,6 +140,7 @@ function onChordInput(e?: Event) {
 
 function onHashChange() {
   changeModel(getUrlHash());
+  populateChordsDatalist(model.chordName);
 }
 
 
