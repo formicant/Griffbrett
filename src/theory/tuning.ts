@@ -29,9 +29,9 @@ export function getGroup(rootNote: Note, note: Note | null): number | undefined 
 /**
  * Represents the tuning of an instrument.
  * Can contain both absolute-pitched and octave-invariant strings.
- * (Octave-invariant strings are a workaround for octave-doubled strings for now)
- * The order of the strings is top-to-bottom in the instrument's playing position
- * (on the diagram, however, it's bottom-to-top)
+ * The order of the strings is left-to-right if the instrument is right-handed
+ * and positioned with the neck up and the strings facing you.
+ * (On the diagram, the order is bottom-to-top)
  */
 export class Tuning {
   readonly description: string;
@@ -58,7 +58,8 @@ export class Tuning {
    * Each row is an array of cells and represents a string.
    * The order of the rows follows the string order in the tuning description (bottom-to-top on the diagram).
    * A cell represents a fret. 0th cell in a row represents open string.
-   * Each cell contains either a note (if the note is in the chord) or `null` (otherwise)
+   * Each cell contains either a note (if the note is in the chord) or `null` (otherwise).
+   * If the chord is `undefined`, returns a table with all `null`s
    */
   getFretboard(chord?: Chord, fretCount: number = 12): Array<Note | null>[] {
     const allowedPitches = chord !== undefined
