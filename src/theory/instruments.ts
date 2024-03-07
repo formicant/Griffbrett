@@ -34,7 +34,7 @@ export const instruments: { [name: string]: Tuning } = {
 
 export const instrumentByTuning: { [tuning: string]: string } = { };
 for (const [name, tuning] of Object.entries(instruments)) {
-  instrumentByTuning[tuning.description] = name;
-  // Now, the last instrument with the given tuning is used.
-  // TODO: Change this if needed.
+  if (!(tuning.description in instrumentByTuning)) {
+    instrumentByTuning[tuning.description] = name;
+  }
 }

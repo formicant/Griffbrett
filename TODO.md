@@ -1,6 +1,7 @@
 # TO DO
 
 - Refactor
+- Show fingering
 - Consider adding an input field for chord notes
 - Clickable frets (draw circles)
 - Play MIDI (e.g. [Html Midi Player](https://github.com/cifkao/html-midi-player))
