@@ -70,6 +70,8 @@ let model: Model;
 function displayPage(model: Model) {
   // assuming that the model is consistent
   
+  removeEventListener('hashchange', onHashChange);
+  
   const status = [];
   const output = [];
   
@@ -106,6 +108,10 @@ function displayPage(model: Model) {
   
   statusElement.replaceChildren(...status);
   outputElement.replaceChildren(...output);
+  
+  // Timeout fixes recursive onHashChange calls
+  // TODO: find a better solution
+  setTimeout(() => { addEventListener('hashchange', onHashChange); }, 100);
 }
 
 function changeModel(newModel: Model) {
@@ -139,6 +145,8 @@ function onChordInput(e?: Event) {
 }
 
 function onHashChange() {
+  console.log('onHashChange' + Date());
+
   changeModel(getUrlHash());
   populateChordsDatalist(model.chordName);
 }
@@ -146,7 +154,6 @@ function onHashChange() {
 
 // Entry point
 export function initialize() {  
-  populateChordsDatalist();
   populateInstruments();
   
   onHashChange();
