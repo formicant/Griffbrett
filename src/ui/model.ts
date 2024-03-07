@@ -25,7 +25,8 @@ export const defaultModel: Model = {
 /**
  * Changes the model so that its values are consistent and returns the result.
  * The values don't have to be valid though (e.g. invalid tuning or chord are OK,
- * but a valid tuning with a wrong instrument is not)
+ * but a valid tuning with a wrong instrument is not).
+ * Should be called before displaying the page
  */
 export function makeConsistent(model: Model): Model {
   // fretCount should be an integer between 0 and maxFretCount

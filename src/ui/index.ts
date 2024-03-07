@@ -54,7 +54,7 @@ function populateInstruments() {
   }
 }
 
-/** Gets the HTML element containing the list of chord's notes */
+/** Gets HTML element containing the list of chord's notes */
 function getChordDescriptionElement(chord: Chord): HTMLParagraphElement {
   const notes = applyTypography(chord.notes.join(' '));
   return createElement('p', {
@@ -117,7 +117,7 @@ function displayPage(model: Model) {
     status.push(getErrorElement(`Invalid tuning: ${message}`));
   }
   
-  // input field values
+  // set the input field values
   instrumentElement.value = model.instrument;
   tuningElement.value = model.tuningDescription;
   fretCountElement.value = model.fretCount.toString();
@@ -127,7 +127,7 @@ function displayPage(model: Model) {
   statusElement.replaceChildren(...status);
   outputElement.replaceChildren(...output);
   
-  // Timeout fixes recursive `onHashChange` calls
+  // timeout fixes recursive `onHashChange` calls
   // TODO: find the reason and a better solution
   setTimeout(() => { addEventListener('hashchange', onHashChange); }, 100);
 }

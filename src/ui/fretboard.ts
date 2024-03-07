@@ -36,7 +36,11 @@ function getFrettedStringElement(frettedString: Array<Note | null>, rootNote?: N
 /** Gets the HTML representation of the fretboard diagram */
 export function getFretboardElement(fretboard: Array<Note | null>[], rootNote?: Note): HTMLDivElement {
   const fretboardElement = createElement('div', { id: 'fretboard' });
+  
+  // add fret numbers
   fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));
+  
+  // add strings bottom to top
   for (const frettedString of [...fretboard].reverse()) {
     fretboardElement.appendChild(getFrettedStringElement(frettedString, rootNote));
   }
