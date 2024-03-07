@@ -8,7 +8,7 @@ const saturation = 0.65;
  * Generates an OKlab color for a given group index
  * so that all colors have the same lightness and saturation,
  * all groups have different hues,
- * and hues of the neighbor groups contrast well with each other
+ * and hues of neighbor groups contrast well with each other
  */
 export function getGroupColor(group: number): string {
   const hue = goldenAngle * group;
