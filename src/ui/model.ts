@@ -4,6 +4,7 @@ import { Tuning } from '../theory/tuning';
 /**
  * Represents the values of the page's input fields.
  * The values don't have to be valid or consistent.
+ * Immutable
  */
 export interface Model {
   readonly instrument: string; // '' means custom
@@ -14,7 +15,7 @@ export interface Model {
 
 export const maxFretCount = 36;
 
-/** The values used when the page is open without a URL hash */
+/** The values used when the page is openned without a URL hash */
 export const defaultModel: Model = {
   instrument: 'Ukulele (high G)',
   tuningDescription: 'G4 C4 E4 A4',
