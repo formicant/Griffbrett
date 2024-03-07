@@ -24,6 +24,7 @@ const suffixMeanings: { [suffix: string]: number[] } = {
 const knownSuffixes = Object.keys(suffixMeanings);
 knownSuffixes.sort();
 
+/** List of all valid chord names, used in the chord popup */
 export const knownChordNames: string[] = [];
 for (const note of knownNoteNames) {
   for (const suffix of knownSuffixes) {

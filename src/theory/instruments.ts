@@ -32,6 +32,7 @@ export const instruments: { [name: string]: Tuning } = {
   'Violin':                     new Tuning('G3 D4 A4 E5'),
 };
 
+/** Gets the first instrument with the given tuning */
 export const instrumentByTuning: { [tuning: string]: string } = { };
 for (const [name, tuning] of Object.entries(instruments)) {
   if (!(tuning.description in instrumentByTuning)) {

@@ -2,6 +2,18 @@ import { Model, defaultModel } from './model';
 
 const formatVersion = 0;
 
+/**
+ * Encodes the model into the page's URL hash part.
+ * This allows the user to share links to specific tunings and chords
+ */
+export function setUrlHash(model: Model) {
+  const tuningDescription = model.tuningDescription.trim().replace(/\s+/g, '-');
+  const chordName = model.chordName.trim();
+  const hash = `${formatVersion}|${tuningDescription}|${model.fretCount}|${chordName}`;
+  window.location.hash = hash;
+}
+
+/** Reads the model from the page's URL hash part */
 export function getUrlHash(): Model {
   try {
     const text = decodeURI(window.location.hash.replace(/#/, ''));
@@ -14,11 +26,4 @@ export function getUrlHash(): Model {
     }
   } catch { }
   return defaultModel;
-}
-
-export function setUrlHash(model: Model) {
-  const tuningDescription = model.tuningDescription.trim().replace(/\s+/g, '-');
-  const chordName = model.chordName.trim();
-  const hash = `${formatVersion}|${tuningDescription}|${model.fretCount}|${chordName}`;
-  window.location.hash = hash;
 }

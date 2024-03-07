@@ -33,6 +33,7 @@ function getFrettedStringElement(frettedString: Array<Note | null>, rootNote?: N
   return frettedStringElement;
 }
 
+/** Gets the HTML representation of the fretboard diagram */
 export function getFretboardElement(fretboard: Array<Note | null>[], rootNote?: Note): HTMLDivElement {
   const fretboardElement = createElement('div', { id: 'fretboard' });
   fretboardElement.appendChild(getFretHeaderElement(fretboard[0].length));

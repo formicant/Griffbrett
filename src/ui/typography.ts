@@ -16,6 +16,11 @@ const characterDict: { [char: string]: string } = {
 const replaceRegex = new RegExp(`[${Object.keys(characterDict)}]`, 'g');
 
 
+/**
+ * Replaces easy-to-type ASCII characters
+ * for accidentals and octave numbers
+ * with good-looking Unicode ones
+ */
 export function applyTypography(text: string): string {
   return text.replace(replaceRegex, c => characterDict[c]);
 }

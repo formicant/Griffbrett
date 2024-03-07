@@ -1,3 +1,4 @@
+/** 12edo notes. A note can have one or two names */
 const noteNames = [
   ['C'], ['C#', 'Db'],
   ['D'], ['D#', 'Eb'],
@@ -22,16 +23,25 @@ for (const [index, names] of noteNames.entries()) {
   }
 }
 
+/**
+ * List of all valid note names in alphabetical order
+ * ['A', 'A#', 'Ab', 'B', ..., 'Gb']
+ * Used in the chord popup
+ */
 export const knownNoteNames = Object.keys(noteIndexByName);
 knownNoteNames.sort();
 
-export const noteNamePattern = '[A-G][#b]?';
+export const noteNamePattern = '[A-G][#b]?'; // used by chord.ts
 
 const noteRegex = new RegExp(`^(${noteNamePattern})(\\d)?$`);
 
 
+/** Represents either an absolute-pitched note or an octave-invariant note */
 export class Note {
+  /** Index of the note inside an octave (C = 0, C# = 1, ..., B = 11) */
   readonly pitchClass: number;
+  
+  /** Octave number (0 to 9) for an absolute note or `undefined` for an octave-invariant note */
   readonly octave?: number;
   
   constructor(name: string) {
@@ -56,6 +66,7 @@ export class Note {
     return note;
   }
   
+  /** Canonical name of the note. Flats aren't used (e.g. Bb becomes A#) */
   toString(): string {
     const noteName = noteNames[this.pitchClass][0];
     return this.octave !== undefined
@@ -63,6 +74,7 @@ export class Note {
       : noteName;
   }
   
+  /** Adds a non-negative interval in semitones and returns the result */
   addInterval(interval: number): Note {
     const pitch = this.pitchClass + interval;
     const octave = this.octave !== undefined

@@ -4,6 +4,12 @@ const goldenAngle = 2 * Math.PI / (phi * phi);
 const lightness = 0.55;
 const saturation = 0.65;
 
+/**
+ * Generates an OKlab color for a given group index
+ * so that all colors have the same lightness and saturation,
+ * all groups have different hues,
+ * and hues of the neighbor groups contrast well with each other
+ */
 export function getGroupColor(group: number): string {
   const hue = goldenAngle * group;
   const l = lightness * 100;

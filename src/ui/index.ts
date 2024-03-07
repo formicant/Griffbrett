@@ -8,7 +8,7 @@ import { Model, makeConsistent } from './model';
 import { getUrlHash, setUrlHash } from './urlHash';
 
 
-// Html elements
+// Static page elements
 const instrumentElement = getById<HTMLSelectElement>('instrument');
 const tuningElement     = getById<HTMLInputElement>('tuning');
 const fretCountElement  = getById<HTMLInputElement>('fretCount');
@@ -17,12 +17,16 @@ const chordsDataList    = getById<HTMLDataListElement>('chords');
 const statusElement     = getById('status');
 const outputElement     = getById('output');
 
-// Chords datalist options
+/** Chords datalist options */
 const chordOptions: { [chord: string]: HTMLOptionElement } = { };
 for (const chord of knownChordNames) {
   chordOptions[chord] = createElement('option', { value: chord });
 }
 
+/**
+ * When the user types in the chord field,
+ * this function forms the popup list with suggestions
+ */
 function populateChordsDatalist(text: string = '') {
   const normalizedText = text.trim().toLowerCase();
   
@@ -40,6 +44,7 @@ function populateChordsDatalist(text: string = '') {
   chordsDataList.replaceChildren(...matches.map(c => chordOptions[c]));
 }
 
+/** Populates the instrument drop-down */
 function populateInstruments() {
   for (const instrument of Object.keys(instruments)) {
     instrumentElement.appendChild(createElement('option', {
@@ -49,6 +54,7 @@ function populateInstruments() {
   }
 }
 
+/** Gets the HTML element containing the list of chord's notes */
 function getChordDescriptionElement(chord: Chord): HTMLParagraphElement {
   const notes = applyTypography(chord.notes.join(' '));
   return createElement('p', {
@@ -57,6 +63,7 @@ function getChordDescriptionElement(chord: Chord): HTMLParagraphElement {
   });
 }
 
+/** Gets HTML element containing an error message */
 function getErrorElement(message: string): HTMLParagraphElement {
   return createElement('p', {
     id: 'error',
@@ -65,11 +72,15 @@ function getErrorElement(message: string): HTMLParagraphElement {
 }
 
 
+/** Current state of the page */
 let model: Model;
 
+/**
+ * Displays the current state of the page.
+ * The model should be consistent (use `makeConsistent` before calling this)
+ */
 function displayPage(model: Model) {
-  // assuming that the model is consistent
-  
+  // prevent recursive `onHashChange` calls
   removeEventListener('hashchange', onHashChange);
   
   const status = [];
@@ -77,14 +88,17 @@ function displayPage(model: Model) {
   
   try {
     const tuning = new Tuning(model.tuningDescription);
+    // tuning is valid
     
     const chordName = model.chordName.trim();
     let chord: Chord | undefined = undefined;
     if (chordName !== '') {
       try {
         chord = new Chord(chordName);
+        // chord is valid
         status.push(getChordDescriptionElement(chord));
       } catch(error) {
+        // chord is invalid
         const message = error instanceof Error ? error.message : `${error}`;
         status.push(getErrorElement(message));
       }
@@ -94,26 +108,31 @@ function displayPage(model: Model) {
     output.push(getFretboardElement(fretboard, chord?.notes[0]));
     
     if (chord !== undefined || chordName === '') {
+      // change url hash only if the tuning is valid and the chord is valid or empty
       setUrlHash(model);
     }
   } catch(error) {
+    // tuning is invalid
     const message = error instanceof Error ? error.message : `${error}`;
     status.push(getErrorElement(`Invalid tuning: ${message}`));
   }
-
+  
+  // input field values
   instrumentElement.value = model.instrument;
   tuningElement.value = model.tuningDescription;
   fretCountElement.value = model.fretCount.toString();
   chordElement.value = model.chordName;
   
+  // display the output
   statusElement.replaceChildren(...status);
   outputElement.replaceChildren(...output);
   
-  // Timeout fixes recursive onHashChange calls
-  // TODO: find a better solution
+  // Timeout fixes recursive `onHashChange` calls
+  // TODO: find the reason and a better solution
   setTimeout(() => { addEventListener('hashchange', onHashChange); }, 100);
 }
 
+/** Changes the current page state */
 function changeModel(newModel: Model) {
   model = makeConsistent(newModel);
   displayPage(model);

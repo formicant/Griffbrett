@@ -1,3 +1,4 @@
+/** Generic-typed version of `getElementById` */
 export function getById<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
   if (!element) {
@@ -6,6 +7,7 @@ export function getById<T extends HTMLElement>(id: string): T {
   return element as T;
 }
 
+/** Creates an HTML element with the given tag name, properties and (optionally) style */
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   properties?: Partial<HTMLElementTagNameMap[K]>,
