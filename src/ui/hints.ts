@@ -18,15 +18,16 @@ function getHints(inputText: string): Hint[] {
     return suffixes.map(suffix => {
       const chordName = note + suffix;
       const chord = new Chord(chordName);
+      const notes = chord.notes.join(' ');
       return {
         text: chordName,
-        tooltip: chord.notes.join(' ')
+        tooltip: `⟨ ${notes} ⟩`
       };
     });
   } else {
     return noteNames.map(names => ({
       text: names[0],
-      tooltip: names[1] || ''
+      tooltip: `= ${names[1]}` || ''
     }));
   }
 }

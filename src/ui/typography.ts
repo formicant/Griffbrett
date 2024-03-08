@@ -29,10 +29,6 @@ const superscript: { [char: string]: string } = {
   '9': '⁹',
 };
 
-const accidentalRegex = new RegExp(`[${Object.keys(accidentals)}]`, 'g');
-
-const numberRegex = /\d/g;
-
 
 /**
  * Replaces easy-to-type ASCII characters
@@ -41,8 +37,8 @@ const numberRegex = /\d/g;
  */
 export function typesetNote(text: string): string {
   return text
-    .replace(accidentalRegex, c => accidentals[c])
-    .replace(numberRegex, c => subscript[c]);
+    .replace(/[#b]/g, c => accidentals[c])
+    .replace(/\d/g, c => subscript[c]);
 }
 
 /**
@@ -52,6 +48,6 @@ export function typesetNote(text: string): string {
  */
 export function typesetChord(text: string): string {
   return text
-    .replace(accidentalRegex, c => accidentals[c]);
-    //.replace(numberRegex, c => superscript[c]);
+    .replace(/[#b]/g, c => accidentals[c]);
+    //.replace(/\d/g, c => superscript[c]);
 }
