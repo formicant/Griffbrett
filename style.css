@@ -10,7 +10,7 @@ html, input, select {
 }
 
 body {
-  background: #f8f8f8;;
+  background: #fcfcfc;;
   color: black;
 }
 
@@ -83,7 +83,7 @@ button:hover {
 
 button:active {
   opacity: 1;
-  background: #ddd;
+  background: #eee;
 }
 
 #status {
