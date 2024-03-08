@@ -1,4 +1,4 @@
-import { Chord, knownChordNames } from '../theory/chord';
+import { Chord } from '../theory/chord';
 import { Tuning } from '../theory/tuning';
 import { instruments } from '../theory/instruments';
 import { getById, createElement } from './dom';
@@ -6,6 +6,7 @@ import { applyTypography } from './typography';
 import { getFretboardElement } from './fretboard';
 import { Model, makeConsistent } from './model';
 import { getUrlHash, setUrlHash } from './urlHash';
+import { Hints } from './hints';
 
 
 // Static page elements
@@ -13,36 +14,13 @@ const instrumentElement = getById<HTMLSelectElement>('instrument');
 const tuningElement     = getById<HTMLInputElement>('tuning');
 const fretCountElement  = getById<HTMLInputElement>('fretCount');
 const chordElement      = getById<HTMLInputElement>('chord');
-const chordsDataList    = getById<HTMLDataListElement>('chords');
+const clearChordButton  = getById<HTMLInputElement>('clearChord');
+const hintsElement      = getById('hints');
 const statusElement     = getById('status');
 const outputElement     = getById('output');
 
-/** Chords datalist options */
-const chordOptions: { [chord: string]: HTMLOptionElement } = { };
-for (const chord of knownChordNames) {
-  chordOptions[chord] = createElement('option', { value: chord });
-}
+const hints = new Hints(hintsElement, onHintClick)
 
-/**
- * When the user types in the chord field,
- * this function forms the popup list with suggestions
- */
-function populateChordsDatalist(text: string = '') {
-  const normalizedText = text.trim().toLowerCase();
-  
-  const exactMatches = knownChordNames.filter(c =>
-    c.toLowerCase() === normalizedText);
-  const beginningMatches = knownChordNames.filter(c =>
-    c.toLowerCase().startsWith(normalizedText) &&
-    !exactMatches.includes(c));
-  const substringMatches = knownChordNames.filter(c =>
-    c.toLowerCase().includes(normalizedText) &&
-    !exactMatches.includes(c) &&
-    !beginningMatches.includes(c));
-  const matches = [...exactMatches, ...beginningMatches, ...substringMatches];
-  
-  chordsDataList.replaceChildren(...matches.map(c => chordOptions[c]));
-}
 
 /** Populates the instrument drop-down */
 function populateInstruments() {
@@ -123,6 +101,8 @@ function displayPage(model: Model) {
   fretCountElement.value = model.fretCount.toString();
   chordElement.value = model.chordName;
   
+  hints.show(model.chordName);
+  
   // display the output
   statusElement.replaceChildren(...status);
   outputElement.replaceChildren(...output);
@@ -155,17 +135,21 @@ function onFretCountInput() {
   changeModel({ ...model, fretCount });
 }
 
-function onChordInput(e?: Event) {
+function onChordInput() {
   const chordName = chordElement.value;
-  if (e instanceof InputEvent && e.inputType !== 'insertReplacementText') {
-    populateChordsDatalist(chordName);
-  }
   changeModel({ ...model, chordName });
+}
+
+function onHintClick(hint: string) {
+  changeModel({ ...model, chordName: hint });
+}
+
+function onChordClear() {
+  changeModel({ ...model, chordName: '' });
 }
 
 function onHashChange() {
   changeModel(getUrlHash());
-  populateChordsDatalist(model.chordName);
 }
 
 
@@ -180,6 +164,7 @@ export function initialize() {
   tuningElement    .addEventListener('input', onTuningInput);
   fretCountElement .addEventListener('input', onFretCountInput);
   chordElement     .addEventListener('input', onChordInput);
+  clearChordButton.addEventListener('click', onChordClear);
   
   chordElement.focus();
 }

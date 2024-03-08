@@ -1,5 +1,5 @@
 /** 12edo notes. A note can have one or two names */
-const noteNames = [
+export const noteNames = [
   ['C'], ['C#', 'Db'],
   ['D'], ['D#', 'Eb'],
   ['E'],
@@ -9,7 +9,7 @@ const noteNames = [
   ['B'],
 ];
 
-const unsupported: { [name: string]: string } = {
+export const unsupported: { [name: string]: string } = {
   'Cb': 'B',
   'B#': 'C',
   'Fb': 'E',
@@ -23,13 +23,6 @@ for (const [index, names] of noteNames.entries()) {
   }
 }
 
-/**
- * List of all valid note names in alphabetical order
- * ['A', 'A#', 'Ab', 'B', ..., 'Gb']
- * Used in the chord popup
- */
-export const knownNoteNames = Object.keys(noteIndexByName);
-knownNoteNames.sort();
 
 export const noteNamePattern = '[A-G][#b]?'; // used by chord.ts
 

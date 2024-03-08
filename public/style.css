@@ -68,6 +68,24 @@ datalist {
   width: 3rem;
 }
 
+button {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 1;
+}
+
+button:active {
+  opacity: 1;
+  background: #ddd;
+}
+
 #status {
   height: 2rem;
 }
