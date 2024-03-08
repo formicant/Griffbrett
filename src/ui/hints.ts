@@ -27,7 +27,7 @@ function getHints(inputText: string): Hint[] {
   } else {
     return noteNames.map(names => ({
       text: names[0],
-      tooltip: `= ${names[1]}` || ''
+      tooltip: names.length > 1 ? `= ${names[1]}` : ''
     }));
   }
 }
