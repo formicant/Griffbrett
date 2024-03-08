@@ -3,7 +3,7 @@ import { Chord, suffixes } from '../theory/chord';
 import { createElement } from './dom';
 import { typesetChord } from './typography';
 
-const noteRegex = new RegExp(`^\s*${noteNamePattern}`);
+const noteRegex = new RegExp(`^\\s*(${noteNamePattern})`);
 
 
 interface Hint {
@@ -13,10 +13,10 @@ interface Hint {
 
 
 function getHints(inputText: string): Hint[] {
-  const note = inputText.match(noteRegex);
-  if (note && !(note[0] in unsupported)) {
+  const match = inputText.match(noteRegex);
+  if (match && !(match[1] in unsupported)) {
     return suffixes.map(suffix => {
-      const chordName = note + suffix;
+      const chordName = match[1] + suffix;
       const chord = new Chord(chordName);
       const notes = chord.notes.join(' ');
       return {
