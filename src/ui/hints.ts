@@ -1,5 +1,5 @@
 import { noteNames, noteNamePattern, unsupported } from '../theory/note';
-import { Chord, suffixMeanings } from '../theory/chord';
+import { Chord, suffixes } from '../theory/chord';
 import { createElement } from './dom';
 import { applyTypography } from './typography';
 
@@ -15,7 +15,7 @@ interface Hint {
 function getHints(inputText: string): Hint[] {
   const note = inputText.match(noteRegex);
   if (note && !(note[0] in unsupported)) {
-    return Object.keys(suffixMeanings).map(suffix => {
+    return suffixes.map(suffix => {
       const chordName = note + suffix;
       const chord = new Chord(chordName);
       return {

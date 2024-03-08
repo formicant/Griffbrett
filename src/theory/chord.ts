@@ -3,7 +3,13 @@ import { Note, noteNamePattern } from './note';
 // Intervals in semitones:
 const [P1, m2, M2, m3, M3, P4, A4, P5, m6, M6, m7, M7] = Array(12).keys();
 
-export const suffixMeanings: { [suffix: string]: number[] } = {
+export const suffixes = [
+  'm(no5)', '(no5)', '5',
+  'dim', 'sus2', 'm', '', 'sus4', 'aug',
+  'm6', '6', 'm7', 'mM7', '7', 'M7',
+] as const;
+
+const suffixMeanings: { [suffix in typeof suffixes[number]]: number[] } = {
   'm(no5)': [P1, m3],
   '(no5)':  [P1, M3],
   '5':      [P1, P5],
@@ -19,7 +25,7 @@ export const suffixMeanings: { [suffix: string]: number[] } = {
   'mM7':    [P1, m3, P5, M7],
   '7':      [P1, M3, P5, m7],
   'M7':     [P1, M3, P5, M7],
-};
+} as const;
 
 
 const chordRegex = new RegExp(`^(${noteNamePattern})(.*)$`);
@@ -42,7 +48,7 @@ export class Chord {
       throw new SyntaxError(`Can't parse chord suffix ${suffix}`);
     }
     this.notes = [];
-    for (const interval of suffixMeanings[suffix]) {
+    for (const interval of suffixMeanings[suffix as keyof typeof suffixMeanings]) {
       this.notes.push(root.addInterval(interval));
     }
   }
