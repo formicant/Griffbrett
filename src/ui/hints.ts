@@ -42,7 +42,7 @@ export class Hints {
     this.onClick = onClick;
   }
 
-  private getHintElement(hint: Hint) {
+  private getHintElement(hint: Hint): HTMLButtonElement {
     const button = createElement('button', {
       innerText: typesetChord(hint.text),
       title: typesetChord(hint.tooltip),

@@ -1,4 +1,5 @@
 import { Model, defaultModel } from './model';
+import { removeTypography } from './typography';
 
 const formatVersion = 0;
 
@@ -7,8 +8,8 @@ const formatVersion = 0;
  * This allows the user to share links to specific tunings and chords.
  */
 export function setUrlHash(model: Model) {
-  const tuningDescription = model.tuningDescription.trim().replace(/\s+/g, '-');
-  const chordName = model.chordName.trim();
+  const tuningDescription = removeTypography(model.tuningDescription).trim().replace(/\s+/g, '-');
+  const chordName = removeTypography(model.chordName).trim();
   const hash = `${formatVersion}|${tuningDescription}|${model.fretCount}|${chordName}`;
   window.location.hash = hash;
 }

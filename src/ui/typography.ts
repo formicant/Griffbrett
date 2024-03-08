@@ -16,18 +16,12 @@ const subscript: { [char: string]: string } = {
   '9': '₉',
 };
 
-const superscript: { [char: string]: string } = {
-  '0': '⁰',
-  '1': '¹',
-  '2': '²',
-  '3': '³',
-  '4': '⁴',
-  '5': '⁵',
-  '6': '⁶',
-  '7': '⁷',
-  '8': '⁸',
-  '9': '⁹',
-};
+const backwardDictionary: { [char: string]: string } = Object.fromEntries(
+  Object.entries(accidentals).concat(Object.entries(subscript))
+    .map(([key, value]) => [value, key]));
+
+const backwardRegex = new RegExp(
+  `[${Object.values(accidentals).concat(Object.values(subscript))}]`, 'g');
 
 
 /**
@@ -47,7 +41,12 @@ export function typesetNote(text: string): string {
  * with good-looking Unicode ones
  */
 export function typesetChord(text: string): string {
-  return text
-    .replace(/[#b]/g, c => accidentals[c]);
-    //.replace(/\d/g, c => superscript[c]);
+  return text.replace(/[#b]/g, c => accidentals[c]);
+}
+
+/**
+ * Replaces unicode characters with ASCII ones
+ */
+export function removeTypography(text: string): string {
+  return text.replace(backwardRegex, c => backwardDictionary[c]);
 }

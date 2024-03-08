@@ -2,7 +2,7 @@ import { Chord } from '../theory/chord';
 import { Tuning } from '../theory/tuning';
 import { instruments } from '../theory/instruments';
 import { getById, createElement } from './dom';
-import { typesetNote } from './typography';
+import { typesetNote, removeTypography } from './typography';
 import { getFretboardElement } from './fretboard';
 import { Model, makeConsistent } from './model';
 import { getUrlHash, setUrlHash } from './urlHash';
@@ -65,10 +65,10 @@ function displayPage(model: Model) {
   const output = [];
   
   try {
-    const tuning = new Tuning(model.tuningDescription);
+    const tuning = new Tuning(removeTypography(model.tuningDescription));
     // tuning is valid
     
-    const chordName = model.chordName.trim();
+    const chordName = removeTypography(model.chordName).trim();
     let chord: Chord | undefined = undefined;
     if (chordName !== '') {
       try {
@@ -101,7 +101,7 @@ function displayPage(model: Model) {
   fretCountElement.value = model.fretCount.toString();
   chordElement.value = model.chordName;
   
-  hints.show(model.chordName);
+  hints.show(removeTypography(model.chordName));
   
   // display the output
   statusElement.replaceChildren(...status);
