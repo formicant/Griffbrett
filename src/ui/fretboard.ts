@@ -1,7 +1,7 @@
 import { Note } from '../theory/note';
 import { createElement } from './dom';
 import { getGroup } from '../theory/tuning';
-import { applyTypography } from './typography';
+import { typesetNote } from './typography';
 import { getGroupColor } from './colors';
 
 function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
@@ -18,7 +18,7 @@ function getFretHeaderElement(fretCount: number): HTMLParagraphElement {
 
 function getFretElement(fretNote: Note | null, rootNote?: Note): HTMLSpanElement {
   const innerText = fretNote !== null
-    ? applyTypography(fretNote.toString())
+    ? typesetNote(fretNote.toString())
     : '·';
   const group = rootNote !== undefined ? getGroup(rootNote, fretNote) : undefined;
   const color = group !== undefined ? getGroupColor(group) : undefined;

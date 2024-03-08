@@ -2,7 +2,7 @@ import { Chord } from '../theory/chord';
 import { Tuning } from '../theory/tuning';
 import { instruments } from '../theory/instruments';
 import { getById, createElement } from './dom';
-import { applyTypography } from './typography';
+import { typesetNote } from './typography';
 import { getFretboardElement } from './fretboard';
 import { Model, makeConsistent } from './model';
 import { getUrlHash, setUrlHash } from './urlHash';
@@ -34,7 +34,7 @@ function populateInstruments() {
 
 /** Gets HTML element containing the list of chord's notes */
 function getChordDescriptionElement(chord: Chord): HTMLParagraphElement {
-  const notes = applyTypography(chord.notes.join(' '));
+  const notes = typesetNote(chord.notes.join(' '));
   return createElement('p', {
     id: 'chordDescription',
     innerText: `⟨ ${notes} ⟩`

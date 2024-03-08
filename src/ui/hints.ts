@@ -1,7 +1,7 @@
 import { noteNames, noteNamePattern, unsupported } from '../theory/note';
 import { Chord, suffixes } from '../theory/chord';
 import { createElement } from './dom';
-import { applyTypography } from './typography';
+import { typesetChord } from './typography';
 
 const noteRegex = new RegExp(`^\s*${noteNamePattern}`);
 
@@ -43,8 +43,8 @@ export class Hints {
 
   private getHintElement(hint: Hint) {
     const button = createElement('button', {
-      innerText: applyTypography(hint.text),
-      title: applyTypography(hint.tooltip),
+      innerText: typesetChord(hint.text),
+      title: typesetChord(hint.tooltip),
     });
     button.addEventListener('click', () => { this.onClick(hint.text); });
     return button;

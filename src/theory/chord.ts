@@ -25,7 +25,7 @@ const suffixMeanings: { [suffix in typeof suffixes[number]]: number[] } = {
   'mM7':    [P1, m3, P5, M7],
   '7':      [P1, M3, P5, m7],
   'M7':     [P1, M3, P5, M7],
-} as const;
+};
 
 
 const chordRegex = new RegExp(`^(${noteNamePattern})(.*)$`);
