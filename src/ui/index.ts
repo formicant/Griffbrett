@@ -53,14 +53,19 @@ function getErrorElement(message: string): HTMLParagraphElement {
 /** Current state of the page */
 let model: Model;
 
+function changeUrlHash() {
+  removeEventListener('hashchange', onHashChange);
+  setUrlHash(model);
+  // timeout fixes recursive `onHashChange` calls
+  // TODO: find the reason and a better solution
+  setTimeout(() => { addEventListener('hashchange', onHashChange); }, 100);
+}
+
 /**
  * Displays the current state of the page.
  * The model should be consistent (use `makeConsistent` before calling this)
  */
 function displayPage(model: Model) {
-  // prevent recursive `onHashChange` calls
-  removeEventListener('hashchange', onHashChange);
-  
   const status = [];
   const output = [];
   
@@ -87,7 +92,7 @@ function displayPage(model: Model) {
     
     if (chord !== undefined || chordName === '') {
       // change url hash only if the tuning is valid and the chord is valid or empty
-      setUrlHash(model);
+      changeUrlHash();
     }
   } catch(error) {
     // tuning is invalid
@@ -106,15 +111,11 @@ function displayPage(model: Model) {
   // display the output
   statusElement.replaceChildren(...status);
   outputElement.replaceChildren(...output);
-  
-  // timeout fixes recursive `onHashChange` calls
-  // TODO: find the reason and a better solution
-  setTimeout(() => { addEventListener('hashchange', onHashChange); }, 100);
 }
 
 /** Changes the current page state */
-function changeModel(newModel: Model) {
-  model = makeConsistent(newModel);
+function changeModel(change: Partial<Model>) {
+  model = makeConsistent({...model, ...change});
   displayPage(model);
 }
 
@@ -122,30 +123,30 @@ function changeModel(newModel: Model) {
 
 function onInstrumentInput() {
   const instrument = instrumentElement.value;
-  changeModel({ ...model, instrument, tuningDescription: '' });
+  changeModel({ instrument, tuningDescription: '' });
 }
 
 function onTuningInput() {
   const tuningDescription = tuningElement.value;
-  changeModel({ ...model, tuningDescription, instrument: '' });
+  changeModel({ tuningDescription, instrument: '' });
 }
 
 function onFretCountInput() {
   const fretCount = parseInt(fretCountElement.value);
-  changeModel({ ...model, fretCount });
+  changeModel({ fretCount });
 }
 
 function onChordInput() {
   const chordName = chordElement.value;
-  changeModel({ ...model, chordName });
+  changeModel({ chordName });
 }
 
 function onHintClick(hint: string) {
-  changeModel({ ...model, chordName: hint });
+  changeModel({ chordName: hint });
 }
 
 function onChordClear() {
-  changeModel({ ...model, chordName: '' });
+  changeModel({ chordName: '' });
 }
 
 function onHashChange() {
