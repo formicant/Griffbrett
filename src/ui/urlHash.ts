@@ -19,7 +19,7 @@ export function setUrlHash(model: Model) {
  */
 export function getUrlHash(): Model {
   try {
-    const text = decodeURI(window.location.hash.replace(/#/, ''));
+    const text = decodeURIComponent(window.location.hash.replace(/#/, ''));
     const parts = text.split('|');
     const instrument = parts[0];
     const tuningDescription = parts[1].replace(/-/g, ' ');
