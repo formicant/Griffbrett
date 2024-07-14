@@ -26,6 +26,7 @@ export const instruments: { [name: string]: Tuning } = {
   'Timple':                     new Tuning('G4 C5 E4 A4 D5'),
   'Ukulele (high G)':           new Tuning('G4 C4 E4 A4'),
   'Ukulele (low G)':            new Tuning('G3 C4 E4 A4'),
+  'Ukulele (D6)':               new Tuning('A4 D4 F#4 B4'),
   'Ukulele (baritone)':         new Tuning('D3 G3 B3 E4'),
   'Vihuela':                    new Tuning('A3 D4 G4 B3 E4'),
   'Viola':                      new Tuning('C3 G3 D4 A4'),
